@@ -1,0 +1,53 @@
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import Button from './Button'
+import deleteImg from "../../image/delete.svg"
+
+export default function ParaGraph({index,data,deletePara}) {
+   const [topic,setTopic] = useState("");
+   const [text,setText] = useState("");
+
+
+const AddData = useCallback(() => {
+    data.current[index] = {text,chapter:topic};
+  }, [data, index, text, topic]);
+
+  const handleDelete = useCallback(()=>{
+    console.log("click");
+    const currentArr = data.current;
+
+    // Delete the element at index 1.
+    currentArr.splice(index, 1);
+  
+    // Set the new value of the array.
+    data.current = currentArr;
+    deletePara(index)
+  },[deletePara,index]);
+
+
+   useEffect(()=>{
+    AddData();
+},[text,topic,AddData])
+   
+    return (
+        <div className='paragraph'>
+            {index}
+            <div className="d-flex ">
+                <div className="subject mb-3">
+
+                <div className="p-2"> <label >Caption :</label></div>
+                <div className="p-2"><input type="text" placeholder='Topic heading (optional)' onInput={(e)=>{setTopic(e.target.value)}}/></div>
+                </div>
+                <div className="ms-auto p-2"><img className='delete' src={deleteImg} alt="" style={{ height: "1.5rem" }} onClick={handleDelete} />
+                </div>
+            </div>
+
+            <div className='data-box'>
+                <Button message={"Upload Img"} />
+            </div>
+            <div className="data-box">
+                <textarea rows={5} onInput={(e)=>{setText(e.target.value)}}/>
+            </div>
+        </div>
+
+    )
+}

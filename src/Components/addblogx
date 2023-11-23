@@ -1,0 +1,166 @@
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import Button from './subComponent/Button'
+import uploadImg from "../image/upload_.svg"
+import tempImg from "../image/download.jpeg"
+import ParaGraph from './subComponent/ParaGraph';
+import Blog from './subComponent/Blog';
+export default function AddBlog() {
+
+  // dropdown useState
+  const [topisOpen, setTopicOpen] = useState(false);
+  const [TextColorisOpen, setTextColorOpen] = useState(false);
+  const [PageColorisOpen, setPageColorOpen] = useState(false);
+
+  // Preview 
+  const [previewBlog,setPreviewBlog]= useState(false);
+  // Add paras
+
+  const index = useRef(0);
+  const data= useRef([]);
+  
+
+
+const [paras,setParas] = useState([]);
+// const [arr,setArr] = useState([1,2,3,4,5,6,7])
+
+const deletePara = useCallback((index)=>{
+  
+  const updatedData = paras.filter((item, i) => i !== index);
+  setParas(updatedData);
+  console.log(index);
+  // console.log([...paras.slice(i+1)]);
+  // setParas(modified);
+
+    
+},[setParas,paras]);
+
+useEffect(()=>{
+  setParas([<ParaGraph index={paras.length} deletePara={deletePara} data={data}   />]);
+},[])
+
+  const AddParagraph = useCallback(()=>{
+    setParas((prevVal) => [...prevVal, <ParaGraph index={paras.length} data={data}  deletePara={deletePara} />]);
+
+  },[data,setParas,index,deletePara]);
+
+  const tempHandler = useCallback(()=>{
+    data.current.map((e)=>{
+      console.log(e);
+    })
+    console.log("---------");
+  },[data])
+
+  const blog={blog_id:"bfjs124231", username:"@kalashbharti",thumbnail:tempImg,topic:"thought", heading:"Ai is far more dangerous", like:0 ,comments:[],para:data.current};
+
+  return (
+    <>
+    {previewBlog && <Blog data={blog} active={setPreviewBlog}/>}
+    <div className='addblog'>
+      <div className="previvewBtn">
+        <Button message={"Preview Card"} style={{ backgroundColor: "#7E0000" }}  />
+        <Button message={"Preview Blog"} style={{ backgroundColor: "#7E0000" }} click={()=>{setPreviewBlog(true)}} />
+      </div>
+      <div className="blog-data">
+
+        {/* choose topics */}
+        <div className="data-box">
+          <label>Topic:</label>
+          <div className='drop-down'>
+            <div className='drop-down-text'>
+              <label>Choose element</label>
+              <img src="https://img.icons8.com/ios-filled/100/ffffff/sort-down.png" alt="sort-down" onClick={() => { setTopicOpen((e) => !e) }} />
+
+            </div>
+            <ul style={{ display: topisOpen ? "block" : "none" }}>
+              <li>kalash bharti</li>
+              <li>what is the best</li>
+              <li>news</li>
+            </ul>
+          </div>
+        </div>
+        {/* Subject Input */}
+        <div className='subject'>
+
+          <div className='data-box'>
+            <label >Caption :</label>
+            <input type="text" />
+          </div>
+          <h6>Subject must be less then 100 letters</h6>
+        </div>
+
+        {/* Add thumbnail */}
+        <div className='data-box'>
+          <label>Thumbnail :</label>
+          <Button message={"Upload"} icon={uploadImg} />
+        </div>
+
+        {/* preview Thumbnai */}
+        <div className="data-box">
+          <img className='prev-img' src={tempImg} alt="" />
+        </div>
+
+        {/* page color selection  */}
+        <div className='data-box'>
+          <label>Paper color :</label>
+          <div className='drop-down'>
+            <div className='drop-down-text'>
+              <label>Choose element</label>
+              <img src="https://img.icons8.com/ios-filled/100/ffffff/sort-down.png" alt="sort-down" onClick={() => { setPageColorOpen((e) => !e) }} />
+
+            </div>
+            <ul style={{ display: PageColorisOpen ? "block" : "none" }}>
+              <li>Black</li>
+              <li>white</li>
+              <li>Yellow</li>
+              <li>pink</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* text color selection */}
+        <div className='data-box'>
+          <label>Text color :</label>
+          <div className='drop-down'>
+            <div className='drop-down-text'>
+              <label>Choose Color</label>
+              <img src="https://img.icons8.com/ios-filled/100/ffffff/sort-down.png" alt="sort-down" onClick={() => { setTextColorOpen((e) => !e) }} />
+
+            </div>
+            <ul style={{ display: TextColorisOpen ? "block" : "none" }}>
+              <li>Black</li>
+              <li>white</li>
+              <li>Yellow</li>
+              <li>pink</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* text-color preview */}
+        <div className="data-box">
+          <label > Preview Text :</label>
+          <label style={{ backgroundColor: "white", color: "black", padding: ".2rem" }}>Example Text</label>
+        </div>
+
+        {/* blog contents */}
+        <div className="data-box">
+          <label>Describe  :-</label>
+        </div>
+
+        {/* blog para */}
+        <div className="para">
+          
+          {paras.map((Component,i)=>{
+              return Component;
+            })
+          }
+         
+          <Button message={"Add Paragraph"} click={AddParagraph}/>
+         
+        </div>
+    <Button message={"Submit Blog"} style={{alignSelf: "center",
+    marginTop: "2rem"}} click={tempHandler}/>
+      </div>
+    </div>
+    </>
+  )
+}
